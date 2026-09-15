@@ -61,4 +61,35 @@ mismo_objeto(P1, P2, Obj) :-
     member(Obj, Lista1),
     member(Obj, Lista2).
 
-    
+%clase 15/9/2026
+
+ser(presente, tercera, singular, "es").
+ser(pasado, tercera, singular, "fue").
+
+conjugar_accion(Verbo, Tiempo, Persona, Numero, C) :-
+    ( Verbo = "ser" ->
+        ser(Tiempo, Persona, Numero, C)
+    ; C = Verbo ).
+
+
+puede_aceptar(Personaje, ID_Mision) :- 
+    personaje(Personaje, Nivel, _),
+    mision(ID_Mision, _, Dificultad, _),
+    Nivel >= Dificultad.
+
+tiene_requerido(Personaje, Objeto):- 
+    inventario(Personaje, Lista), 
+    member(Objeto, Lista).
+
+
+fusionar_equipo(P1, P2, EquipoFusionado):- 
+    inventario(P1, L1), inventario(P2, L2), 
+    append(L1, L2, EquipoFusionado).
+
+generar_reporte(Personaje, MisionID, Mensaje):- 
+    puede_aceptar(Personaje, MisionID),
+    mision(MisionID, Nombre, _, XP),
+    conjugar_accion("ser", presente, tercera, singular, F),
+    atomic_list_concat(
+        [Personaje, F, "capaz de completar", Nombre, "por", XP, "XP"],
+        ' ', Mensaje).
